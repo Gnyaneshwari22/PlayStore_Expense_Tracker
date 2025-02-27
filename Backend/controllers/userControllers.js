@@ -16,7 +16,7 @@ const signup = async (req, res) => {
         .json({ message: "User already exists with this email." });
     }
 
-    // Hash the password
+    // Hashing the password for security Concerns purposes
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
@@ -47,7 +47,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
-
+    //Decrypting the password(password validation)
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
