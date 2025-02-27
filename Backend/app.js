@@ -1,6 +1,7 @@
 const express = require("express");
 const sequelize = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+const expenseRoutes = require("./routes/expenseRoutes");
 const cors = require("cors"); // Import the cors middleware
 
 require("dotenv").config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Use user routes
 app.use("/", userRoutes);
+app.use("/", expenseRoutes);
 
 // Sync database and start server
 sequelize
