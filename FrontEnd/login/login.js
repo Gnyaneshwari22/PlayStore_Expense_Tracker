@@ -13,7 +13,7 @@ const handleLogin = async (payload) => {
       text: "You have successfully logged in.",
     }).then(() => {
       // Redirect to dashboard or home page after the popup is closed
-      window.location.href = "dashboard.html"; // Change this to your desired page
+      window.location.href = "../expenses/expense.html"; // Change this to your desired page
     });
   } catch (error) {
     console.error(
