@@ -2,6 +2,8 @@ const express = require("express");
 const sequelize = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const User = require("./models/User");
+const Expenses = require("./models/Expenses");
 const cors = require("cors"); // Import the cors middleware
 
 require("dotenv").config();
@@ -12,13 +14,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+User.hasMany(Expenses, { foreignKey: "userId" });
+Expenses.belongsTo(User, { foreignKey: "userId" });
+
 // Use user routes
 app.use("/", userRoutes);
 app.use("/", expenseRoutes);
 
 // Sync database and start server
 sequelize
-  .sync()
+  .sync({ force: false })
   .then(() => {
     console.log("Database synced");
     app.listen(3000, () => {
