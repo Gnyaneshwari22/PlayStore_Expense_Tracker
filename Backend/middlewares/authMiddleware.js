@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-console.log("JWT_SECRET from authMiddleware:", process.env.JWT_SECRET); // Debugging line
+//console.log("JWT_SECRET from authMiddleware:", process.env.JWT_SECRET); // Debugging line
 
 const authMiddleware = async (req, res, next) => {
   // Get the token from the Authorization header

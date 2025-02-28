@@ -3,7 +3,15 @@ const API_URL = "http://localhost:3000/expense";
 // Fetch and display expenses
 async function fetchExpenses() {
   try {
-    const response = await axios.get(`${API_URL}/getExpenses`);
+    const token = localStorage.getItem("token"); // Retrieve the token from local storage
+    const response = await axios.get(
+      "http://localhost:3000/expense/getExpenses",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      }
+    );
     const expenses = response.data;
     console.log("Fetched expenses:", expenses);
     displayExpenses(expenses);
@@ -20,7 +28,12 @@ async function fetchExpenses() {
 // Add a new expense
 async function addExpense(expenseData) {
   try {
-    const response = await axios.post(`${API_URL}/addExpense`, expenseData);
+    const token = localStorage.getItem("token"); // Retrieve the token from local storage
+    const response = await axios.post(`${API_URL}/addExpense`, expenseData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the headers
+      },
+    });
     console.log("Expense added:", response.data);
 
     // Show success popup
@@ -67,7 +80,12 @@ function displayExpenses(expenses) {
 // Delete an expense
 async function deleteExpense(id) {
   try {
-    await axios.delete(`${API_URL}/deleteExpense/${id}`);
+    const token = localStorage.getItem("token"); // Retrieve the token from local storage
+    await axios.delete(`${API_URL}/deleteExpense/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the headers
+      },
+    });
     console.log("Expense deleted:", id);
 
     // Show success popup
