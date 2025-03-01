@@ -17,6 +17,7 @@
     <style>
       body {
         padding: 20px;
+        position: relative; /* Required for absolute positioning of the button */
       }
       .expense-card {
         margin-bottom: 10px;
@@ -24,10 +25,21 @@
         border: 1px solid #ddd;
         border-radius: 5px;
       }
+      /* Style for the premium button */
+      #premiumButton {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
+      <!-- Premium Membership Button -->
+      <button id="premiumButton" class="btn btn-success">
+        Buy Premium Membership
+      </button>
+
       <h1 class="text-center my-4">Expense Tracker</h1>
 
       <!-- Expense Form -->
@@ -64,5 +76,14 @@
 
     <!-- Custom JS -->
     <script src="expense.js"></script>
+
+    <!-- Script for Premium Button -->
+    <script>
+      document
+        .getElementById("premiumButton")
+        .addEventListener("click", function () {
+          window.location.href = "../cashFreePayment/cashFreePayment.html";
+        });
+    </script>
   </body>
 </html>

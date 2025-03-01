@@ -4,7 +4,8 @@ const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const User = require("./models/User");
 const Expenses = require("./models/Expenses");
-const cors = require("cors"); // Import the cors middleware
+const orderRoutes = require("./routes/orderRoutes");
+const cors = require("cors");
 
 require("dotenv").config();
 
@@ -20,6 +21,7 @@ Expenses.belongsTo(User, { foreignKey: "userId" });
 // Use user routes
 app.use("/", userRoutes);
 app.use("/", expenseRoutes);
+app.use("/api/payment", orderRoutes);
 
 // Sync database and start server
 sequelize

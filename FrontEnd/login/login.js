@@ -1,35 +1,3 @@
-// Helper function to get the Authorization header with the token
-const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
-
-// Helper function to handle API errors (e.g., token expiry)
-const handleApiError = (error) => {
-  if (error.response && error.response.status === 401) {
-    // Token is expired or invalid
-    localStorage.removeItem("token"); // Clear the token
-    Swal.fire({
-      icon: "error",
-      title: "Session Expired",
-      text: "Please log in again.",
-    }).then(() => {
-      window.location.href = "../login/login.html"; // Redirect to login page
-    });
-  } else {
-    console.error("API Error:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "An error occurred. Please try again.",
-    });
-  }
-};
-
 // Handle login
 const handleLogin = async (payload) => {
   try {
