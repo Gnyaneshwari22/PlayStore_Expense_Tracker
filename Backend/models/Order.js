@@ -10,9 +10,10 @@ const Order = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      primaryKey: true,
     },
     orderAmount: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     orderCurrency: {
@@ -31,14 +32,14 @@ const Order = sequelize.define(
       type: DataTypes.ENUM("PENDING", "SUCCESS", "FAILED"),
       defaultValue: "PENDING",
     },
-    //   createdAt: {
-    //     type: DataTypes.DATE,
-    //     defaultValue: DataTypes.NOW,
-    //   },
-    //   updatedAt: {
-    //     type: DataTypes.DATE,
-    //     defaultValue: DataTypes.NOW,
-    //   },
+    paymentSessionId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER, // Assuming userId is an integer
+      allowNull: false,
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),

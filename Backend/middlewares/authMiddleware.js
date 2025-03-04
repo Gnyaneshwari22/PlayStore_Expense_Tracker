@@ -26,7 +26,10 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Attach the user to the request object
+    req.userId = user.id; // Attach userId to req
+
     req.user = user;
+    console.log("User from request:======================>", req.user); // Debugging line
 
     // Proceed to the next middleware or route handler
     next();

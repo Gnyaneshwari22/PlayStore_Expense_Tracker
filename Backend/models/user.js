@@ -23,6 +23,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    premiumMember: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false, // Default value is false
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),

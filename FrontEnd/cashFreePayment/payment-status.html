@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Status</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+  <body>
+    <h1>Payment Status</h1>
+    <p>Please wait while we fetch your payment status...</p>
+
+    <script>
+      // Function to fetch payment status
+      const fetchPaymentStatus = async (orderId) => {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/payment-status/${orderId}`
+          );
+          const data = await response.json();
+          return data.paymentStatus;
+        } catch (error) {
+          console.error("Error fetching payment status:", error);
+          throw error;
+        }
+      };
+
+      // Get order ID from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get("order_id");
+
+      if (orderId) {
+        // Fetch payment status and display SweetAlert
+        fetchPaymentStatus(orderId)
+          .then((status) => {
+            swal({
+              title: "Payment Status",
+              text: `Order ID: ${orderId}\nStatus: ${status}`,
+              icon: "success",
+            }).then(() => {
+              // Redirect to login page after user clicks OK
+              window.location.href = "../login/login.html";
+            });
+          })
+          .catch((error) => {
+            swal({
+              title: "Error",
+              text: "Failed to fetch payment status. Please try again.",
+              icon: "error",
+            }).then(() => {
+              // Redirect even in case of error (if needed)
+              window.location.href = "../login/login.html";
+            });
+          });
+      } else {
+        swal({
+          title: "Error",
+          text: "Order ID not found in the URL.",
+          icon: "error",
+        }).then(() => {
+          // Redirect if no order ID is found
+          window.location.href = "../login/login.html";
+        });
+      }
+    </script>
+  </body>
+</html>

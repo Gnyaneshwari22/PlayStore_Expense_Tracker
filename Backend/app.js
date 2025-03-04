@@ -3,9 +3,11 @@ const sequelize = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const User = require("./models/User");
+const Order = require("./models/Order");
 const Expenses = require("./models/Expenses");
-const orderRoutes = require("./routes/orderRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const cors = require("cors");
+const path = require("path");
 
 require("dotenv").config();
 
@@ -14,6 +16,7 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../../FrontEnd/cashFreePayment")));
 
 User.hasMany(Expenses, { foreignKey: "userId" });
 Expenses.belongsTo(User, { foreignKey: "userId" });
@@ -21,7 +24,7 @@ Expenses.belongsTo(User, { foreignKey: "userId" });
 // Use user routes
 app.use("/", userRoutes);
 app.use("/", expenseRoutes);
-app.use("/api/payment", orderRoutes);
+app.use("/api", paymentRoutes);
 
 // Sync database and start server
 sequelize

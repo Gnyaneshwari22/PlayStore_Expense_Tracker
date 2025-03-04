@@ -1,0 +1,22 @@
+# Setting Up Webhooks using ngrok
+
+When working with **Cashfree Webhooks** in a local development environment, we need to expose our local server to the internet. Since localhost is not publicly accessible, we use **ngrok** to create a secure tunnel.
+
+## Step 1: Install ngrok (if not installed)
+
+Download and install ngrok from: [https://ngrok.com/download](https://ngrok.com/download)
+
+## Step 2: Start ngrok
+
+Run the following command in your terminal:
+
+```sh
+ngrok http 3000
+
+##step 2:update the craete order function inside paymentController.js file
+        notify_url: `{urlcreated in ur  terminal}/api/cashfree-webhook`,
+
+
+##step 3: add the ngrok url in cashfree account
+
+```

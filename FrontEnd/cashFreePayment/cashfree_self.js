@@ -1,51 +1,28 @@
-// Wait for the DOM to be fully loaded
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM fully loaded. Initializing Cashfree...");
+const cashfree = Cashfree({ mode: "sandbox" });
 
-  // Initialize Cashfree
-  const cashfree = Cashfree({
-    mode: "sandbox",
-  });
+document.getElementById("payButton").addEventListener("click", async () => {
+  try {
+    const orderAmount = 10000;
+    const customerID = "user_123";
+    const customerPhone = "9876543210";
 
-  const payButton = document.getElementById("payButton");
+    const token = localStorage.getItem("token");
+    const response = await fetch("http://localhost:3000/api/pay", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ orderAmount, customerID, customerPhone }),
+    });
 
-  payButton.addEventListener("click", async () => {
-    const orderAmount = "100.00"; // Example amount
-    const customerId = "CUST_12345"; // Example customer ID
-    const customerPhone = "9876543210"; // Example phone number
-
-    try {
-      console.log("Creating order..."); // Debugging: Log start of order creation
-      const response = await axios.post(
-        "http://localhost:3000/api/payment/createOrder",
-        {
-          orderAmount,
-          customerId,
-          customerPhone,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Order creation response:", response.data); // Debugging: Log response data
-
-      const { paymentSessionId } = response.data;
-
-      // Open Cashfree payment form
-      cashfree.checkout({
-        paymentSessionId,
-        returnUrl: "http://localhost:3000/api/payment/return", // Your return URL
-        redirectTarget: "_self", // Open in the same tab
-      });
-    } catch (error) {
-      console.error(
-        "Error initiating payment:",
-        error.response?.data || error.message
-      );
-      alert("Failed to initiate payment. Please try again.");
-    }
-  });
+    const data = await response.json();
+    await cashfree.checkout({
+      paymentSessionId: data.paymentSessionId,
+      redirectTarget: "_self",
+    });
+  } catch (error) {
+    console.error("Error during payment:", error);
+    swal("Payment Failed", "Please try again.", "error");
+  }
 });
