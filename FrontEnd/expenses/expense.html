@@ -17,6 +17,7 @@
     <style>
       body {
         padding: 20px;
+
         position: relative; /* Required for absolute positioning of the button */
       }
       .expense-card {
@@ -38,6 +39,9 @@
       <!-- Premium Membership Button -->
       <button id="premiumButton" class="btn btn-success">
         Buy Premium Membership
+      </button>
+      <button id="leaderBoardButton" class="btn btn-success">
+        Show LeaderBoard
       </button>
 
       <h1 class="text-center my-4">Expense Tracker</h1>
@@ -83,6 +87,11 @@
         .getElementById("premiumButton")
         .addEventListener("click", function () {
           window.location.href = "../cashFreePayment/cashFreePayment.html";
+        });
+      document
+        .getElementById("leaderBoardButton")
+        .addEventListener("click", () => {
+          window.location.href = "../leaderBoard/leaderboard.html";
         });
     </script>
   </body>

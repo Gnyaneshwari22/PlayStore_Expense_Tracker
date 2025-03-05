@@ -122,5 +122,15 @@ document.getElementById("expenseForm").addEventListener("submit", (e) => {
   e.target.reset(); // Clear the form
 });
 
+document
+  .getElementById("leaderBoardButton")
+  .addEventListener("click", async (e) => {
+    let leaderBoardResponse = await axios.get(
+      "http://localhost:3000/premium/showleaderboard"
+    );
+  });
+
+// Redirect to leaderboard.html when the button is clicked
+
 // Fetch expenses on page load
 document.addEventListener("DOMContentLoaded", fetchExpenses);
