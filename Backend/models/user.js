@@ -27,6 +27,11 @@ const User = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false, // Default value is false
     },
+    totalExpense: {
+      // New column
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0.0, // Default value is 0
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),

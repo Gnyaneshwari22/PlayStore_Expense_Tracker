@@ -5,35 +5,23 @@ const sequelize = require("sequelize");
 
 const getTotalExpensesByUser = async (req, res) => {
   try {
-    // Query to get total expenses by user along with username
-    const result = await Expenses.findAll({
-      attributes: [
-        "userId",
-        [sequelize.fn("SUM", sequelize.col("amount")), "totalAmount"], // Aggregate the total amount
-      ],
-      include: [
-        {
-          model: User,
-          attributes: ["username"], // Include the username from the User table
-          required: true, // Ensure only users with expenses are included
-        },
-      ],
-      group: ["userId"], // Group by userId to get totals per user
-      order: [[sequelize.literal("totalAmount"), "DESC"]], // Sort by totalAmount in descending order
-      raw: true, // Return raw data instead of Sequelize instances
+    // Fetch users with their totalExpense, sorted in descending order
+    const users = await User.findAll({
+      attributes: ["id", "username", "totalExpense"],
+      order: [["totalExpense", "DESC"]], // Sort by totalExpense in descending order
+      raw: true, // Return raw data
     });
 
-    // Format the result to match the desired output
-    const formattedResult = result.map((item) => ({
-      userId: item.userId,
-      username: item["User.username"], // Access the username from the joined table
-      totalAmount: parseFloat(item.totalAmount) || 0, // Ensure totalAmount is a number
+    // Format the response
+    const leaderboard = users.map((user, index) => ({
+      rank: index + 1,
+      username: user.username,
+      totalExpense: user.totalExpense,
     }));
 
-    // Send the response
-    res.status(200).json(formattedResult);
+    res.status(200).json(leaderboard);
   } catch (error) {
-    console.error("Error fetching total expenses by user:", error);
+    console.error("Error fetching leaderboard:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -30,7 +30,7 @@ app.use("/premium", premiumRoutes);
 
 // Sync database and start server
 sequelize
-  .sync({ force: false })
+  .sync({ force: true })
   .then(() => {
     console.log("Database synced");
     app.listen(3000, () => {
