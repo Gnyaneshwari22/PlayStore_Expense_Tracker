@@ -8,6 +8,7 @@ const Expenses = require("./models/Expenses");
 const paymentRoutes = require("./routes/paymentRoutes");
 const cors = require("cors");
 const path = require("path");
+const premiumRoutes = require("./routes/premiumUserRoute");
 
 require("dotenv").config();
 
@@ -25,6 +26,7 @@ Expenses.belongsTo(User, { foreignKey: "userId" });
 app.use("/", userRoutes);
 app.use("/", expenseRoutes);
 app.use("/api", paymentRoutes);
+app.use("/premium", premiumRoutes);
 
 // Sync database and start server
 sequelize

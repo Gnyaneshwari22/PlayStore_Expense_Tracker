@@ -1,9 +1,10 @@
 const { Cashfree } = require("cashfree-pg");
 const Order = require("../models/Order");
+require("dotenv").config();
 
 // Set up Cashfree credentials
-Cashfree.XClientId = process.env.CASHFREE_APP_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_SECRET_KEY;
+Cashfree.XClientId = process.env.CASHFREE_API_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_API_SECRET;
 Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
 
 exports.createOrder = async (
@@ -26,7 +27,7 @@ exports.createOrder = async (
       },
       order_meta: {
         return_url: `http://127.0.0.1:5500/FrontEnd/cashFreePayment/payment-status.html?order_id=${orderId}`,
-        notify_url: `https://e663-2409-4071-2106-d308-98ef-4da8-ae36-826e.ngrok-free.app/api/cashfree-webhook`, ///update thi url everythime and update in cashfree and here
+        notify_url: `https://e3fe-2405-204-520d-411e-991c-35d7-1e01-f889.ngrok-free.app/api/cashfree-webhook`, ///update thi url everythime and update in cashfree and here
         payment_methods: "cc,dc,upi,nb",
       },
       order_expiry_time: expiryDate,
