@@ -9,7 +9,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const cors = require("cors");
 const path = require("path");
 const premiumRoutes = require("./routes/premiumUserRoute");
-
+const passwordResetRoutes = require("./routes/passwordResetRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -27,6 +27,7 @@ app.use("/", userRoutes);
 app.use("/", expenseRoutes);
 app.use("/api", paymentRoutes);
 app.use("/premium", premiumRoutes);
+app.use("/password", passwordResetRoutes);
 
 // Sync database and start server
 sequelize
