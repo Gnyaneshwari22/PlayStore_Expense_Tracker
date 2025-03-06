@@ -15,6 +15,6 @@ const {
 
 router.post("/forgotpassword", forgotPassword);
 router.get("/resetpassword/:requestId", resetPasswordForm);
-router.post("/resetpassword", updatePassword);
+router.post("/updatepassword", updatePassword);
 
 module.exports = router;
