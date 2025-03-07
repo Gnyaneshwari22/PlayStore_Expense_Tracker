@@ -32,17 +32,25 @@
         top: 20px;
         right: 20px;
       }
+      #premiumSection {
+        display: flex;
+        justify-content: space-between;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <!-- Premium Membership Button -->
-      <button id="premiumButton" class="btn btn-success">
-        Buy Premium Membership
-      </button>
-      <button id="leaderBoardButton" class="btn btn-success">
-        Show LeaderBoard
-      </button>
+      <div id="premiumSection">
+        <button id="premiumButton" class="btn btn-success">
+          Buy Premium Membership
+        </button>
+        <!-- Premium message will be dynamically inserted here -->
+
+        <button id="leaderBoardButton" class="btn btn-success">
+          Show LeaderBoard
+        </button>
+      </div>
 
       <h1 class="text-center my-4">Expense Tracker</h1>
 
