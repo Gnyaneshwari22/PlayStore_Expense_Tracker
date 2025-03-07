@@ -1,19 +1,49 @@
 const API_URL = "http://localhost:3000/expense";
 
 // Fetch and display expenses
-async function fetchExpenses() {
+// async function fetchExpenses() {
+//   try {
+//     const token = localStorage.getItem("token"); // Retrieve the token from local storage
+//     const response = await axios.get(
+//       "http://localhost:3000/expense/getExpenses",
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`, // Include the token in the headers
+//         },
+//       }
+//     );
+//     const expenses = response.data;
+//     console.log("Fetched expenses:", expenses);
+//     displayExpenses(expenses);
+//   } catch (error) {
+//     console.error("Error fetching expenses:", error);
+//     Swal.fire({
+//       icon: "error",
+//       title: "Error",
+//       text: "Failed to fetch expenses. Please try again.",
+//     });
+//   }
+// }
+
+async function fetchExpenses(page = 1, limit = 3) {
   try {
-    const token = localStorage.getItem("token"); // Retrieve the token from local storage
+    const token = localStorage.getItem("token");
     const response = await axios.get(
       "http://localhost:3000/expense/getExpenses",
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the headers
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          page: page,
+          limit: limit,
         },
       }
     );
-    const expenses = response.data;
+    const { expenses, pagination } = response.data;
     console.log("Fetched expenses:", expenses);
+    console.log("Pagination metadata:", pagination);
+    updatePaginationControls(pagination);
     displayExpenses(expenses);
   } catch (error) {
     console.error("Error fetching expenses:", error);
@@ -23,6 +53,11 @@ async function fetchExpenses() {
       text: "Failed to fetch expenses. Please try again.",
     });
   }
+}
+
+function updatePaginationControls(pagination) {
+  document.getElementById("currentPage").textContent = pagination.currentPage;
+  document.getElementById("totalPages").textContent = pagination.totalPages;
 }
 
 // Add a new expense

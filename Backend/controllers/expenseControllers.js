@@ -32,15 +32,54 @@ const addExpense = async (req, res) => {
 };
 
 // Get all expenses for the authenticated user
+// const getExpenses = async (req, res) => {
+//   try {
+//     const userId = req.user.id; // Get the authenticated user's ID
+
+//     // Fetch expenses only for the authenticated user
+//     const expenses = await Expenses.findAll({ where: { userId } });
+
+//     //console.log("Fetched expenses:", expenses); //debugging
+//     res.status(200).json(expenses);
+//   } catch (error) {
+//     console.error("Error fetching expenses:", error);
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
 const getExpenses = async (req, res) => {
   try {
     const userId = req.user.id; // Get the authenticated user's ID
 
-    // Fetch expenses only for the authenticated user
-    const expenses = await Expenses.findAll({ where: { userId } });
+    // Extract pagination parameters from the query string
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const limit = parseInt(req.query.limit) || 3; // Default to 3 expenses per page if not provided
+    const offset = (page - 1) * limit; // Calculate the offset for pagination
 
-    //console.log("Fetched expenses:", expenses); //debugging
-    res.status(200).json(expenses);
+    // Fetch expenses for the authenticated user with pagination
+    const expenses = await Expenses.findAll({
+      where: { userId },
+      limit: limit,
+      offset: offset,
+      order: [["created_at", "DESC"]], // Optional: Order expenses by creation date (newest first)
+    });
+
+    // Get the total count of expenses for the user (for pagination metadata)
+    const totalExpenses = await Expenses.count({ where: { userId } });
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalExpenses / limit);
+
+    // Send the response with expenses and pagination metadata
+    res.status(200).json({
+      expenses,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalExpenses: totalExpenses,
+        limit: limit,
+      },
+    });
   } catch (error) {
     console.error("Error fetching expenses:", error);
     res.status(400).json({ error: error.message });

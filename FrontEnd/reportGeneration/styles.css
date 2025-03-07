@@ -31,3 +31,8 @@ h3 {
   background-color: #0d6efd; /* Light blue color */
   color: white; /* White text for better contrast */
 }
+
+#downloadBtn {
+  display: inline;
+  align-items: center;
+}
