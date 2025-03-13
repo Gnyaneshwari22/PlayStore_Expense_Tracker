@@ -9,40 +9,87 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <style>
+      .signup-box {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+      #header {
+        margin-left: 1em;
+      }
+      .allLables {
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
     <div class="container mt-5">
       <div class="row justify-content-center">
         <!-- SIGNUP FORM -->
         <div class="col-md-6">
-          <h2 class="text-center mb-4">Signup</h2>
-          <form id="signupForm">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" required />
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" required />
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
-              <input type="tel" class="form-control" id="phone" required />
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Signup</button>
-            <div class="mt-3 text-center">
-              <p>Already User? <a href="../login/login.html">Login</a></p>
-            </div>
-          </form>
+          <h2 id="header"><strong>WELCOME TO EXPENSE TRACKER APP</strong></h2>
+          <div class="signup-box bg-white p-4">
+            <h2 class="text-center mb-4">Please Signup To Continue...</h2>
+            <form id="signupForm">
+              <div class="mb-3">
+                <label class="allLables" for="username" class="form-label"
+                  >Username</label
+                >
+                <input
+                  placeholder="Enter username"
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="allLables" for="email" class="form-label"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  placeholder="Enter Email id"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="allLables" for="password" class="form-label"
+                  >Password</label
+                >
+                <input
+                  placeholder="Enter Password"
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="allLables" for="phone" class="form-label"
+                  >Phone Number</label
+                >
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phone"
+                  placeholder="Enter Phone number"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-success w-100">
+                Signup
+              </button>
+              <div class="mt-3 text-center">
+                <p>Already User? <a href="../login/login.html">Login</a></p>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

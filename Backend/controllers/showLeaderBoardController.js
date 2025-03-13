@@ -1,8 +1,6 @@
 const Expenses = require("../models/Expenses");
 const User = require("../models/User");
 
-const sequelize = require("sequelize");
-
 const getTotalExpensesByUser = async (req, res) => {
   try {
     // Fetch users with their totalExpense, sorted in descending order
@@ -32,13 +30,13 @@ const CheckPremiumStatus = async (req, res) => {
     const userId = req.user.id; // Get the authenticated user's ID
 
     const user = await User.findOne({ where: { id: userId } });
-    console.log("User found in database:", user); // Debugging log
+    //console.log("User found in database:", user); // Debugging log
 
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
 
-    console.log("User premiumMember value:", user.premiumMember); // Debugging log
+    // console.log("User premiumMember value:", user.premiumMember); // Debugging log
     res.status(200).json({ isPremium: user.premiumMember === true }); // Return premium status
   } catch (error) {
     console.error("Error fetching premium status:", error);

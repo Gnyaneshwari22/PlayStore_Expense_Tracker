@@ -8,7 +8,7 @@ const User = sequelize.define(
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -28,7 +28,6 @@ const User = sequelize.define(
       defaultValue: false, // Default value is false
     },
     totalExpense: {
-      // New column
       type: DataTypes.DECIMAL(10, 2),
       defaultValue: 0.0, // Default value is 0
     },

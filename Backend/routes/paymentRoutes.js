@@ -1,4 +1,3 @@
-const path = require("path");
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
@@ -61,7 +60,7 @@ router.get("/payment-status/:orderId?", async (req, res) => {
 
 router.post("/cashfree-webhook", async (req, res) => {
   try {
-    console.log("Received Webhook Data:---------->", req.body); // Log incoming data
+    console.log("Received Webhook Data:---------->", req); // Log incoming data
 
     const order_id = req.body.data.order.order_id; // Access order_id
     const payment_status = req.body.data.payment.payment_status; // Access payment_status

@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment Status</title>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <style>
+      .center-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        margin-top: 2em;
+      }
+    </style>
   </head>
   <body>
-    <h1>Payment Status</h1>
-    <p>Please wait while we fetch your payment status...</p>
+    <div class="center-box">
+      <h1>Payment Status</h1>
+      <p>Please wait while we fetch your payment status...</p>
+    </div>
 
     <script>
       // Function to fetch payment status
@@ -39,7 +51,7 @@
               icon: "success",
             }).then(() => {
               // Redirect to login page after user clicks OK
-              window.location.href = "../login/login.html";
+              window.location.href = "../expenses/expense.html";
             });
           })
           .catch((error) => {
@@ -49,7 +61,7 @@
               icon: "error",
             }).then(() => {
               // Redirect even in case of error (if needed)
-              window.location.href = "../login/login.html";
+              window.location.href = "../expenses/expense.html";
             });
           });
       } else {

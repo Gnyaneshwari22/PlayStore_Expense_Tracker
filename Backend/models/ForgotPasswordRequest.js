@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const { Sequelize } = require("sequelize");
-// Adjust the path to your Sequelize configuration
+
 const { v4: uuidv4 } = require("uuid");
 
 const ForgotPasswordRequest = sequelize.define("ForgotPasswordRequest", {

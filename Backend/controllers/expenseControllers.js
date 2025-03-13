@@ -3,6 +3,8 @@ const User = require("../models/User");
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const { Sequelize } = require("sequelize");
+const fs = require("fs");
+const path = require("path");
 
 // Add a new expense
 const addExpense = async (req, res) => {
@@ -32,20 +34,6 @@ const addExpense = async (req, res) => {
 };
 
 // Get all expenses for the authenticated user
-// const getExpenses = async (req, res) => {
-//   try {
-//     const userId = req.user.id; // Get the authenticated user's ID
-
-//     // Fetch expenses only for the authenticated user
-//     const expenses = await Expenses.findAll({ where: { userId } });
-
-//     //console.log("Fetched expenses:", expenses); //debugging
-//     res.status(200).json(expenses);
-//   } catch (error) {
-//     console.error("Error fetching expenses:", error);
-//     res.status(400).json({ error: error.message });
-//   }
-// };
 
 const getExpenses = async (req, res) => {
   try {
@@ -87,32 +75,6 @@ const getExpenses = async (req, res) => {
 };
 
 // Delete an expense (only if the user owns it)
-// const deleteExpense = async (req, res) => {
-//   try {
-//     const { id } = req.params; // Expense ID to delete
-//     const userId = req.user.id; // Get the authenticated user's ID
-
-//     console.log("Received DELETE request for ID:", id); // Debugging
-
-//     // Find the expense by ID and ensure it belongs to the authenticated user
-//     const expense = await Expenses.findOne({ where: { id, userId } });
-
-//     if (!expense) {
-//       return res
-//         .status(404)
-//         .json({ message: "Expense not found or unauthorized" });
-//     }
-
-//     // Delete the expense
-//     await expense.destroy();
-
-//     console.log("Expense deleted:", id);
-//     res.status(200).json({ message: "Expense deleted successfully" });
-//   } catch (error) {
-//     console.error("Error deleting expense:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// };
 
 const deleteExpense = async (req, res) => {
   const transaction = await sequelize.transaction(); // Start a transaction
@@ -158,4 +120,48 @@ const deleteExpense = async (req, res) => {
   }
 };
 
-module.exports = { addExpense, getExpenses, deleteExpense };
+// Downloading expenses
+
+const downloadExpenses = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming you store user id in the token
+
+    // Fetch expenses for the user from the database
+    const expenses = await Expenses.findAll({
+      where: { userId },
+      attributes: ["amount", "category", "description", "created_at"], // Select specific fields
+    });
+
+    // Convert expenses to CSV format
+    const csv = convertExpensesToCSV(expenses);
+
+    // Define the file path
+    const filePath = path.join(__dirname, "../temp/expenses.csv");
+
+    // Write the CSV data to a file
+    fs.writeFileSync(filePath, csv);
+
+    // Send the file to the client
+    res.download(filePath, "expenses.csv", (err) => {
+      if (err) {
+        console.error("Error sending file:", err);
+        res.status(500).json({ message: "Failed to download file" });
+      }
+
+      // Delete the file after sending it to the client
+      fs.unlinkSync(filePath);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+function convertExpensesToCSV(expenses) {
+  const headers = "Amount,Category,Description,Date\n"; // CSV headers
+  const rows = expenses
+    .map((e) => `${e.amount},${e.category},${e.description},${e.created_at}`)
+    .join("\n");
+  return headers + rows;
+}
+
+module.exports = { addExpense, getExpenses, deleteExpense, downloadExpenses };

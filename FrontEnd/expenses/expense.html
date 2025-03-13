@@ -28,13 +28,16 @@
       }
       /* Style for the premium button */
       #premiumButton {
-        position: absolute;
         top: 20px;
         right: 20px;
       }
       #premiumSection {
         display: flex;
         justify-content: space-between;
+      }
+      .form-label {
+        font-weight: bold;
+        margin-bottom: 5px;
       }
     </style>
   </head>
@@ -50,9 +53,15 @@
         <button id="leaderBoardButton" class="btn btn-success">
           Show LeaderBoard
         </button>
+
+        <!-- logout button -->
+        <button id="logoutButton" class="btn btn-success">Logout</button>
+        <button id="downloadButton" class="btn btn-success">
+          Download Expense Report
+        </button>
       </div>
 
-      <h1 class="text-center my-4">Expense Tracker</h1>
+      <h1 class="text-center my-4">Add your Expenses Here</h1>
 
       <!-- Expense Form -->
       <div class="card p-4 mb-4">

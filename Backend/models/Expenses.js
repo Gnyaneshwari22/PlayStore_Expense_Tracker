@@ -34,8 +34,8 @@ const Expenses = sequelize.define(
     },
   },
   {
-    timestamps: true, // Ensures Sequelize manages createdAt and updatedAt.
-    createdAt: "created_at", // Maps Sequelize's createdAt to created_at
+    timestamps: true,
+    createdAt: "created_at",
     updatedAt: "updated_at",
   }
 );

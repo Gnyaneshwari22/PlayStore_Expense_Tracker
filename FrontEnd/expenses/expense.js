@@ -3,6 +3,7 @@ const API_URL = "http://localhost:3000/expense";
 let currentPage = 1; // Track the current page
 
 // Function to check premium status
+
 async function checkPremiumStatus() {
   try {
     const token = localStorage.getItem("token");
@@ -18,11 +19,12 @@ async function checkPremiumStatus() {
 
     // Update the UI based on premium status
     const premiumButton = document.getElementById("premiumButton");
+    const downloadButton = document.getElementById("downloadButton"); // Get the download button
     const premiumMessage = document.createElement("p");
 
     if (isPremium) {
       // User is a premium member
-      premiumButton.style.display = "none"; // Hide the button
+      premiumButton.style.display = "none"; // Hide the premium button
       premiumMessage.textContent = "You are a premium user 🎉";
       premiumMessage.style.color = "green";
       premiumMessage.style.fontWeight = "bold";
@@ -30,12 +32,18 @@ async function checkPremiumStatus() {
         premiumMessage,
         premiumButton.nextSibling
       );
+
+      // Enable the download button for premium users
+      downloadButton.disabled = false;
     } else {
       // User is not a premium member
-      premiumButton.style.display = "block"; // Show the button
+      premiumButton.style.display = "block"; // Show the premium button
       if (document.contains(premiumMessage)) {
         premiumMessage.remove(); // Remove the message if it exists
       }
+
+      // Disable the download button for non-premium users
+      downloadButton.disabled = true;
     }
   } catch (error) {
     console.error("Error fetching premium status:", error);
@@ -137,11 +145,15 @@ document.getElementById("nextPage").addEventListener("click", () => {
 async function addExpense(expenseData) {
   try {
     const token = localStorage.getItem("token"); // Retrieve the token from local storage
-    const response = await axios.post(`${API_URL}/addExpense`, expenseData, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the headers
-      },
-    });
+    const response = await axios.post(
+      `http://localhost:3000/expense/addExpense`,
+      expenseData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      }
+    );
     console.log("Expense added:", response.data);
 
     // Show success popup
@@ -195,6 +207,32 @@ async function deleteExpense(id) {
   }
 }
 
+// script.js
+
+document.getElementById("downloadButton").addEventListener("click", () => {
+  const token = localStorage.getItem("token");
+  axios
+    .get("http://localhost:3000/expense/download", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the headers
+      },
+      responseType: "blob", // Important for file downloads
+    })
+    .then((response) => {
+      // Create a blob from the response data
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "expenses.csv"); // Set the file name
+      document.body.appendChild(link);
+      link.click(); // Trigger the download
+      link.remove(); // Clean up
+    })
+    .catch((err) => {
+      console.error("Error downloading file:", err);
+    });
+});
+
 // Handle form submission
 document.getElementById("expenseForm").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -221,4 +259,9 @@ document
 document.addEventListener("DOMContentLoaded", () => {
   checkPremiumStatus();
   fetchExpenses(currentPage);
+});
+
+document.getElementById("logoutButton").addEventListener("click", (e) => {
+  localStorage.removeItem("token");
+  window.location.href = "../login/login.html";
 });

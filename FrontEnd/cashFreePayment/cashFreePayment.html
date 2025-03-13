@@ -19,13 +19,15 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh; /* Full viewport height */
+        flex-direction: column;
+        gap: 2em;
+        margin-top: 2em;
       }
       .content-box {
         border: 1px solid #ddd;
         border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 4em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 53%);
         background-color: #f9f9f9;
         text-align: center;
       }
@@ -33,9 +35,12 @@
   </head>
   <body>
     <div class="center-box">
+      <h1>Cashfree Checkout Integration</h1>
       <div class="content-box">
-        <h1 class="mb-4">Expense Tracker</h1>
-        <button id="payButton" class="btn btn-primary">Pay Now</button>
+        <h3 class="mb-4">
+          Click below to open the checkout page in current tab
+        </h3>
+        <button id="payButton" class="btn btn-success p-7">Pay Now</button>
       </div>
     </div>
 
