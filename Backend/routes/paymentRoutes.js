@@ -8,6 +8,7 @@ const {
   getPaymentStatus,
 } = require("../controllers/paymentController");
 
+//route for order creation
 router.post("/pay", authMiddleware, async (req, res) => {
   try {
     const { orderAmount, customerID, customerPhone } = req.body;
@@ -58,6 +59,7 @@ router.get("/payment-status/:orderId?", async (req, res) => {
   }
 });
 
+//logic for upadting the payment status in our DB
 router.post("/cashfree-webhook", async (req, res) => {
   try {
     console.log("Received Webhook Data:---------->", req); // Log incoming data

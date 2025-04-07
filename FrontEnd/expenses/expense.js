@@ -86,6 +86,18 @@ async function fetchExpenses(page = 1, limit = 3) {
   }
 }
 
+function updatePaginationControls(pagination) {
+  document.getElementById("currentPage").textContent = pagination.currentPage;
+  document.getElementById("totalPages").textContent = pagination.totalPages;
+
+  // Enable/disable Previous and Next buttons based on the current page
+  const prevButton = document.getElementById("prevPage");
+  const nextButton = document.getElementById("nextPage");
+
+  prevButton.disabled = pagination.currentPage === 1;
+  nextButton.disabled = pagination.currentPage === pagination.totalPages;
+}
+
 // Display expenses on the UI
 function displayExpenses(expenses) {
   const expenseList = document.getElementById("expenseList");
@@ -108,17 +120,6 @@ function displayExpenses(expenses) {
 }
 
 // Update pagination controls
-function updatePaginationControls(pagination) {
-  document.getElementById("currentPage").textContent = pagination.currentPage;
-  document.getElementById("totalPages").textContent = pagination.totalPages;
-
-  // Enable/disable Previous and Next buttons based on the current page
-  const prevButton = document.getElementById("prevPage");
-  const nextButton = document.getElementById("nextPage");
-
-  prevButton.disabled = pagination.currentPage === 1;
-  nextButton.disabled = pagination.currentPage === pagination.totalPages;
-}
 
 // Handle Previous button click
 document.getElementById("prevPage").addEventListener("click", () => {
@@ -207,31 +208,44 @@ async function deleteExpense(id) {
   }
 }
 
-// script.js
+//Downloading the expenses
+document
+  .getElementById("downloadButton")
+  .addEventListener("click", async () => {
+    const token = localStorage.getItem("token"); // Replace with actual token
 
-document.getElementById("downloadButton").addEventListener("click", () => {
-  const token = localStorage.getItem("token");
-  axios
-    .get("http://localhost:3000/expense/download", {
-      headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the headers
-      },
-      responseType: "blob", // Important for file downloads
-    })
-    .then((response) => {
-      // Create a blob from the response data
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "expenses.csv"); // Set the file name
-      document.body.appendChild(link);
-      link.click(); // Trigger the download
-      link.remove(); // Clean up
-    })
-    .catch((err) => {
-      console.error("Error downloading file:", err);
-    });
-});
+    try {
+      const response = await fetch("http://localhost:3000/expense/download", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download");
+      }
+
+      const data = await response.json();
+      const fileUrl = data.fileUrl;
+
+      // Show success SweetAlert with clickable file link
+      Swal.fire({
+        icon: "success",
+        title: "Expenses Ready to Download!",
+        html: `Click <a href="${fileUrl}" target="_blank" style="color: #3085d6;">here</a> to download your CSV file.`,
+        showConfirmButton: true,
+        confirmButtonText: "Close",
+      });
+    } catch (error) {
+      console.error("Error downloading Expense report:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Download Failed",
+        text: "Something went wrong while fetching your report.",
+      });
+    }
+  });
 
 // Handle form submission
 document.getElementById("expenseForm").addEventListener("submit", (e) => {

@@ -1,33 +1,41 @@
 const Expenses = require("../models/Expenses");
 const User = require("../models/User");
-const { DataTypes } = require("sequelize");
+// const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
-const { Sequelize } = require("sequelize");
+//const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
 
+const AWS = require("aws-sdk");
+const convertExpensesToCSV = require("../utils/convertExpensesToCSV"); // make sure this is correct
+require("dotenv").config();
+
 // Add a new expense
+
 const addExpense = async (req, res) => {
+  const t = await sequelize.transaction(); // Start a transaction
+
   try {
     const { amount, description, category } = req.body;
-    const userId = req.user.id; // Get the authenticated user's ID
+    const userId = req.user.id;
 
-    // Create a new expense associated with the user
-    const expense = await Expenses.create({
-      amount,
-      description,
-      category,
-      userId, // Associate the expense with the user
-    });
-    // Update the user's totalExpense
+    // Create a new expense within the transaction
+    const expense = await Expenses.create(
+      { amount, description, category, userId },
+      { transaction: t }
+    );
+
+    // Update the user's totalExpense within the transaction
     await User.increment("totalExpense", {
       by: amount,
       where: { id: userId },
+      transaction: t,
     });
 
-    //console.log("Expense added:", expense);  //debugging console
+    await t.commit(); // Explicitly commit the transaction if everything succeeds
     res.status(201).json(expense);
   } catch (error) {
+    await t.rollback(); //  Rollback the transaction if an error occurs
     console.error("Error adding expense:", error);
     res.status(400).json({ error: error.message });
   }
@@ -122,46 +130,88 @@ const deleteExpense = async (req, res) => {
 
 // Downloading expenses
 
+// const downloadExpenses = async (req, res) => {
+//   try {
+//     const userId = req.user.id; // Assuming you store user id in the token
+
+//     // Fetch expenses for the user from the database
+//     const expenses = await Expenses.findAll({
+//       where: { userId },
+//       attributes: ["amount", "category", "description", "created_at"], // Select specific fields
+//     });
+
+//     // Convert expenses to CSV format
+//     const csv = convertExpensesToCSV(expenses);
+
+//     // Define the file path
+//     const filePath = path.join(__dirname, "../temp/expenses.csv");
+
+//     // Write the CSV data to a file
+//     fs.writeFileSync(filePath, csv);
+
+//     // Send the file to the client
+//     res.download(filePath, "expenses.csv", (err) => {
+//       if (err) {
+//         console.error("Error sending file:", err);
+//         res.status(500).json({ message: "Failed to download file" });
+//       }
+
+//       // Delete the file after sending it to the client
+//       fs.unlinkSync(filePath);
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+// AWS config
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+const s3 = new AWS.S3();
+
 const downloadExpenses = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming you store user id in the token
+    const userId = req.user.id;
 
-    // Fetch expenses for the user from the database
+    // 1. Fetch all expenses for the user
     const expenses = await Expenses.findAll({
       where: { userId },
-      attributes: ["amount", "category", "description", "created_at"], // Select specific fields
+      attributes: ["amount", "category", "description", "created_at"],
     });
 
-    // Convert expenses to CSV format
+    if (!expenses || expenses.length === 0) {
+      return res.status(404).json({ message: "No expenses found for user" });
+    }
+
+    // 2. Convert to CSV format using your function
     const csv = convertExpensesToCSV(expenses);
 
-    // Define the file path
-    const filePath = path.join(__dirname, "../temp/expenses.csv");
+    // 3. Upload to S3
+    const fileName = `expenses_${userId}_${Date.now()}.csv`;
 
-    // Write the CSV data to a file
-    fs.writeFileSync(filePath, csv);
+    const params = {
+      Bucket: process.env.S3_BUCKET,
+      Key: fileName,
+      Body: csv,
+      // ACL: "public-read", // makes the file publicly accessible
+      ContentType: "text/csv",
+    };
 
-    // Send the file to the client
-    res.download(filePath, "expenses.csv", (err) => {
-      if (err) {
-        console.error("Error sending file:", err);
-        res.status(500).json({ message: "Failed to download file" });
-      }
+    const data = await s3.upload(params).promise();
 
-      // Delete the file after sending it to the client
-      fs.unlinkSync(filePath);
+    // 4. Send the file URL to the frontend
+    return res.status(200).json({
+      message: "Expenses file uploaded successfully",
+      fileUrl: data.Location,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error downloading expenses:", error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
-
-function convertExpensesToCSV(expenses) {
-  const headers = "Amount,Category,Description,Date\n"; // CSV headers
-  const rows = expenses
-    .map((e) => `${e.amount},${e.category},${e.description},${e.created_at}`)
-    .join("\n");
-  return headers + rows;
-}
 
 module.exports = { addExpense, getExpenses, deleteExpense, downloadExpenses };

@@ -1,9 +1,8 @@
+const apiurl = "http://localhost:3000";
+
 const handleSignup = async (payload) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/user/signup",
-      payload
-    );
+    const response = await axios.post(`${apiurl}/user/signup`, payload);
     console.log("Signup successful:", response.data);
 
     // Show success popup
@@ -48,17 +47,13 @@ const getFormData = (formId) => {
   };
 };
 
-// Attach event listener to the signup form
-if (document.getElementById("signupForm")) {
-  document
-    .getElementById("signupForm")
-    .addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevent form submission
+//Adding event listner to the signup form
 
-      // Get form data
-      const payload = getFormData("signupForm");
-
-      // Handle signup
-      await handleSignup(payload);
-    });
-}
+let signupForm = document.getElementById("signupForm");
+signupForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  // Get form data
+  const payload = getFormData("signupForm");
+  // Handle signup
+  await handleSignup(payload);
+});

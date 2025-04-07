@@ -1,10 +1,9 @@
+const apiurl = "http://localhost:3000";
+
 // Handle login
 const handleLogin = async (payload) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/user/login",
-      payload
-    );
+    const response = await axios.post(`${apiurl}/user/login`, payload);
     console.log("Login successful:", response.data);
 
     // Show success popup
@@ -52,19 +51,16 @@ const getFormData = (formId) => {
 };
 
 // Attach event listener to the login form
-if (document.getElementById("loginForm")) {
-  document
-    .getElementById("loginForm")
-    .addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevent form submission
 
-      // Get form data
-      const payload = getFormData("loginForm");
+let loginForm = document.getElementById("loginForm");
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  // Get form data
+  const payload = getFormData("loginForm");
 
-      // Handle login
-      await handleLogin(payload);
-    });
-}
+  // Handle login
+  await handleLogin(payload);
+});
 
 // Show Forgot Password Form
 if (document.getElementById("forgotPasswordLink")) {
