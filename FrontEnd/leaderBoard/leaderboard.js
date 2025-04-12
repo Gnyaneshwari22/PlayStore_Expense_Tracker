@@ -1,7 +1,7 @@
 async function fetchLeaderboardData() {
   try {
     const response = await axios.get(
-      "http://localhost:3000/premium/showleaderboard"
+      "http://65.0.105.253:3000/premium/showleaderboard"
     );
     console.log("API Response:", response.data);
     if (response.status !== 200) {

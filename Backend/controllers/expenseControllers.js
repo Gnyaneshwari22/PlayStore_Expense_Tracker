@@ -1,14 +1,19 @@
 const Expenses = require("../models/Expenses");
 const User = require("../models/User");
-// const { DataTypes } = require("sequelize");
+const convertExpensesToCSV = require("../utils/convertExpensesToCSV"); // make sure this is correct
+
 const sequelize = require("../config/db");
-//const { Sequelize } = require("sequelize");
-const fs = require("fs");
-const path = require("path");
+require("dotenv").config();
 
 const AWS = require("aws-sdk");
-const convertExpensesToCSV = require("../utils/convertExpensesToCSV"); // make sure this is correct
-require("dotenv").config();
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+const s3 = new AWS.S3();
 
 // Add a new expense
 
@@ -129,50 +134,6 @@ const deleteExpense = async (req, res) => {
 };
 
 // Downloading expenses
-
-// const downloadExpenses = async (req, res) => {
-//   try {
-//     const userId = req.user.id; // Assuming you store user id in the token
-
-//     // Fetch expenses for the user from the database
-//     const expenses = await Expenses.findAll({
-//       where: { userId },
-//       attributes: ["amount", "category", "description", "created_at"], // Select specific fields
-//     });
-
-//     // Convert expenses to CSV format
-//     const csv = convertExpensesToCSV(expenses);
-
-//     // Define the file path
-//     const filePath = path.join(__dirname, "../temp/expenses.csv");
-
-//     // Write the CSV data to a file
-//     fs.writeFileSync(filePath, csv);
-
-//     // Send the file to the client
-//     res.download(filePath, "expenses.csv", (err) => {
-//       if (err) {
-//         console.error("Error sending file:", err);
-//         res.status(500).json({ message: "Failed to download file" });
-//       }
-
-//       // Delete the file after sending it to the client
-//       fs.unlinkSync(filePath);
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// AWS config
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
-
-const s3 = new AWS.S3();
-
 const downloadExpenses = async (req, res) => {
   try {
     const userId = req.user.id;

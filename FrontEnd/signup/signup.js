@@ -1,4 +1,4 @@
-const apiurl = "http://localhost:3000";
+const apiurl = "http://65.0.105.253:3000";
 
 const handleSignup = async (payload) => {
   try {

@@ -35,7 +35,7 @@ const forgotPassword = async (req, res) => {
     });
     // Send email with the reset link
     //  const resetUrl = `http://localhost:3000/password/resetpassword/${requestId}`;
-    const resetUrl = `http://localhost:5500//FrontEnd/login/reset-password.html?requestId=${requestId}`;
+    const resetUrl = `http://65.0.105.253/FrontEnd/login/reset-password.html?requestId=${requestId}`;
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
     sendSmtpEmail.to = [{ email }];
     sendSmtpEmail.sender = {

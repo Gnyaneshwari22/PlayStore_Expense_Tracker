@@ -27,7 +27,7 @@
       const fetchPaymentStatus = async (orderId) => {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/payment-status/${orderId}`
+            `http://65.0.105.253:3000/api/payment-status/${orderId}`
           );
           const data = await response.json();
           return data.paymentStatus;

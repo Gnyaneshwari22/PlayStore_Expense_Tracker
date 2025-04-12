@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/expense";
+const API_URL = "http://65.0.105.253:3000/expense";
 
 let currentPage = 1; // Track the current page
 
@@ -8,7 +8,7 @@ async function checkPremiumStatus() {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:3000/premium/user/premiumStatus",
+      "http://65.0.105.253:3000/premium/user/premiumStatus",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ async function fetchExpenses(page = 1, limit = 3) {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:3000/expense/getExpenses",
+      "http://65.0.105.253:3000/expense/getExpenses",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -147,7 +147,7 @@ async function addExpense(expenseData) {
   try {
     const token = localStorage.getItem("token"); // Retrieve the token from local storage
     const response = await axios.post(
-      `http://localhost:3000/expense/addExpense`,
+      `http://65.0.105.253:3000/expense/addExpense`,
       expenseData,
       {
         headers: {
@@ -181,7 +181,7 @@ async function addExpense(expenseData) {
 async function deleteExpense(id) {
   try {
     const token = localStorage.getItem("token"); // Retrieve the token from local storage
-    await axios.delete(`${API_URL}/deleteExpense/${id}`, {
+    await axios.delete(`http://65.0.105.253:3000/deleteExpense/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`, // Include the token in the headers
       },
@@ -215,12 +215,15 @@ document
     const token = localStorage.getItem("token"); // Replace with actual token
 
     try {
-      const response = await fetch("http://localhost:3000/expense/download", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "http://65.0.105.253:3000/expense/download",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to download");
@@ -265,7 +268,7 @@ document
   .getElementById("leaderBoardButton")
   .addEventListener("click", async (e) => {
     let leaderBoardResponse = await axios.get(
-      "http://localhost:3000/premium/showleaderboard"
+      "http://65.0.105.253:3000/premium/showleaderboard"
     );
   });
 

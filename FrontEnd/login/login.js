@@ -1,4 +1,4 @@
-const apiurl = "http://localhost:3000";
+const apiurl = "http://65.0.105.253:3000";
 
 // Handle login
 const handleLogin = async (payload) => {
@@ -94,7 +94,7 @@ if (document.getElementById("forgotPasswordFormContent")) {
       try {
         // Call the backend API to send the reset password email
         const response = await axios.post(
-          "http://localhost:3000/password/forgotpassword",
+          "http://65.0.105.253:3000/password/forgotpassword",
           {
             email,
           }

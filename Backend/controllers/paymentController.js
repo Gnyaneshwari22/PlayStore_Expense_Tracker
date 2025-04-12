@@ -26,8 +26,8 @@ exports.createOrder = async (
         customer_email: "test@example.com",
       },
       order_meta: {
-        return_url: `http://127.0.0.1:5500/FrontEnd/cashFreePayment/payment-status.html?order_id=${orderId}`,
-        notify_url: `https://8c32-2405-204-522f-52b-d06a-350c-a164-3568.ngrok-free.app/api/cashfree-webhook`, ///update thi url everythime and update in cashfree and here
+        return_url: `http://65.0.105.253/FrontEnd/cashFreePayment/payment-status.html?order_id=${orderId}`,
+        notify_url: `http://65.0.105.253/api/cashfree-webhook`, ///update thi url everythime and update in cashfree and here
 
         payment_methods: "cc,dc,upi,nb",
       },
@@ -43,27 +43,6 @@ exports.createOrder = async (
     throw error;
   }
 };
-
-// exports.getPaymentStatus = async (orderId) => {
-//   try {
-//     for (let attempt = 0; attempt < 3; attempt++) {
-//       const response = await Cashfree.PGOrderFetchPayments(
-//         "2023-08-01",
-//         orderId
-//       );
-//       console.log("Payment details:", response.data);
-//       const payments = response.data;
-//       if (payments.some((txn) => txn.payment_status === "SUCCESS"))
-//         return "Success";
-//       if (payments.some((txn) => txn.payment_status === "PENDING"))
-//         await new Promise((r) => setTimeout(r, 5000));
-//     }
-//     return "Pending";
-//   } catch (error) {
-//     console.error("Error fetching payment status:", error.message);
-//     throw error;
-//   }
-// };
 
 exports.getPaymentStatus = async (orderId) => {
   const MAX_ATTEMPTS = 5; // Increased from 3 to 5
