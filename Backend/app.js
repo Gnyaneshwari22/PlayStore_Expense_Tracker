@@ -1,6 +1,7 @@
 const express = require("express");
 const sequelize = require("./config/db");
 const cors = require("cors");
+const path = require("path");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
@@ -13,7 +14,8 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(cors());
 app.use(express.json());
-//app.use(express.static(path.join(__dirname, "../../FrontEnd/cashFreePayment"))); //check this one..
+app.use(express.static(path.join(__dirname, "../../FrontEnd/cashFreePayment"))); //check this one..
+app.use("/FrontEnd", express.static(path.join(__dirname, "../FrontEnd")));
 
 // Use user routes
 app.use("/user", userRoutes);

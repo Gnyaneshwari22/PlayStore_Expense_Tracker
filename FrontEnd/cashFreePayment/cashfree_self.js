@@ -7,7 +7,7 @@ document.getElementById("payButton").addEventListener("click", async () => {
     const customerPhone = "9876543210";
 
     const token = localStorage.getItem("token");
-    const response = await fetch("http://65.0.105.253:3000/api/pay", {
+    const response = await fetch("http://localhost:3000/api/pay", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,7 +1,13 @@
 async function fetchLeaderboardData() {
   try {
+    const token = localStorage.getItem("token"); // Retrieve the token from local storage
     const response = await axios.get(
-      "http://65.0.105.253:3000/premium/showleaderboard"
+      "http://localhost:3000/premium/showleaderboard",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     console.log("API Response:", response.data);
     if (response.status !== 200) {

@@ -7,6 +7,6 @@ const {
   CheckPremiumStatus,
 } = require("../controllers/showLeaderBoardController");
 
-router.get("/showleaderboard", getTotalExpensesByUser);
+router.get("/showleaderboard", authMiddleware, getTotalExpensesByUser);
 router.get("/user/premiumStatus", authMiddleware, CheckPremiumStatus);
 module.exports = router;

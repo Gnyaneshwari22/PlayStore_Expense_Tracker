@@ -27,7 +27,7 @@
       const fetchPaymentStatus = async (orderId) => {
         try {
           const response = await fetch(
-            `http://65.0.105.253:3000/api/payment-status/${orderId}`
+            `http://localhost:3000/api/payment-status/${orderId}`
           );
           const data = await response.json();
           return data.paymentStatus;
@@ -51,7 +51,7 @@
               icon: "success",
             }).then(() => {
               // Redirect to login page after user clicks OK
-              window.location.href = "../expenses/expense.html";
+              window.location.href = "../login/login.html";
             });
           })
           .catch((error) => {

@@ -26,8 +26,8 @@ exports.createOrder = async (
         customer_email: "test@example.com",
       },
       order_meta: {
-        return_url: `http://65.0.105.253/FrontEnd/cashFreePayment/payment-status.html?order_id=${orderId}`,
-        notify_url: `http://65.0.105.253/api/cashfree-webhook`, ///update thi url everythime and update in cashfree and here
+        return_url: `http://localhost:3000/FrontEnd/cashFreePayment/payment-status.html?order_id=${orderId}`,
+        notify_url: `https://1874-2409-4071-2115-1489-6824-c373-c399-1552.ngrok-free.app/api/cashfree-webhook`, ///update thi url everythime and update in cashfree and here
 
         payment_methods: "cc,dc,upi,nb",
       },

@@ -37,7 +37,7 @@ async function init() {
 async function verifyResetToken(token) {
   try {
     const response = await axios.get(
-      `http://65.0.105.253:3000/password/resetpassword/${token}`
+      `http://localhost:3000/password/resetpassword/${token}`
     );
 
     loadingMessage.classList.add("hidden");
@@ -112,7 +112,7 @@ function validatePasswords(newPassword, confirmPassword) {
 // Update password via API
 async function updatePassword(token, newPassword) {
   const response = await axios.post(
-    "http://65.0.105.253:3000/password/updatepassword",
+    "http://localhost:3000/password/updatepassword",
     { requestId: token, newPassword }
   );
   return response;
@@ -155,7 +155,7 @@ function showError(message) {
 
 // Redirect to login page
 function redirectToLogin() {
-  window.location.href = "http://65.0.105.253/FrontEnd/login/login.html";
+  window.location.href = "http://localhost:3000/FrontEnd/login/login.html";
 }
 
 // Initialize the application when DOM is loaded

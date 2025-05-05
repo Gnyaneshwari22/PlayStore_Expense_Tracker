@@ -35,7 +35,7 @@ const forgotPassword = async (req, res) => {
     });
     // Send email with the reset link
     //  const resetUrl = `http://localhost:3000/password/resetpassword/${requestId}`;
-    const resetUrl = `http://65.0.105.253/FrontEnd/login/reset-password.html?requestId=${requestId}`;
+    const resetUrl = `http://localhost:3000/FrontEnd/login/reset-password.html?requestId=${requestId}`;
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
     sendSmtpEmail.to = [{ email }];
     sendSmtpEmail.sender = {
@@ -48,10 +48,36 @@ const forgotPassword = async (req, res) => {
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    res.status(200).json({ message: "Password reset email sent successfully" });
+    res.status(200).json({
+      message:
+        "Password reset email sent on your registered Email id successfully",
+    });
   } catch (error) {
     console.error("Error sending email:", error);
     res.status(500).json({ message: "Failed to send password reset email" });
+  }
+};
+
+//When the user clicks the reset link, check if the request exists and is active.
+const resetPasswordForm = async (req, res) => {
+  const { requestId } = req.params;
+  console.log("Request ID:", requestId);
+  console.log("Query Result:", req);
+  try {
+    // Find the forgot password request
+    const request = await ForgotPasswordRequest.findOne({
+      where: { id: requestId, isActive: true },
+    });
+
+    if (!request) {
+      return res.status(404).json({ message: "Invalid or expired reset link" });
+    }
+
+    // Render the reset password form (or return a JSON response)
+    res.status(200).json({ message: "Valid reset link" });
+  } catch (error) {
+    console.error("Error finding reset request:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 //update password
@@ -83,29 +109,6 @@ const updatePassword = async (req, res) => {
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     console.error("Error updating password:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-//When the user clicks the reset link, check if the request exists and is active.
-const resetPasswordForm = async (req, res) => {
-  const { requestId } = req.params;
-  console.log("Request ID:", requestId);
-  console.log("Query Result:", req);
-  try {
-    // Find the forgot password request
-    const request = await ForgotPasswordRequest.findOne({
-      where: { id: requestId, isActive: true },
-    });
-
-    if (!request) {
-      return res.status(404).json({ message: "Invalid or expired reset link" });
-    }
-
-    // Render the reset password form (or return a JSON response)
-    res.status(200).json({ message: "Valid reset link" });
-  } catch (error) {
-    console.error("Error finding reset request:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
